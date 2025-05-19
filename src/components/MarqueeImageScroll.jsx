@@ -1,5 +1,5 @@
 import gsap from "gsap";
-import React, { useLayoutEffect, useMemo, useRef } from "react";
+import React, { useLayoutEffect, useRef } from "react";
 
 const images = [
   "/stock1.jpg",
@@ -9,58 +9,74 @@ const images = [
   "/stock2.jpg",
   "/stock3.jpg",
 ];
-const MarqueeImageScroll = ({ isReversed, containerClass }) => {
-    const containerRef = useRef(null);
 
-    useLayoutEffect(() => {
-      const container = containerRef.current;
-  
-      // Duplicate items must be appended once for seamless wrap
-      const items = container.querySelectorAll('.marquee-item');
-      const containerWidth = container.scrollWidth / 2;
+const MarqueeImageScroll = () => {
+  const containerRef = useRef(null);
+  const animationRef = useRef(null);
 
-    //   gsap.to(container , {
-    //     x: `-= ${containerWidth}` 
-    //   })
-  
-      gsap.to(container, {
-        x: `-=${containerWidth}`,
-        duration: 15,
-        ease: 'none',
-        repeat: -1,
-        modifiers: {
-          x: gsap.utils.unitize(x => parseFloat(x) % containerWidth),
-        },
-      });
-    }, []);
-  
-    return (
-      <div className="overflow-hidden w-full py-4">
-        <div
-          className="flex w-max gap-8 pt-20"
-          ref={containerRef}
-        >
-          {/* Repeat images twice for infinite loop */}
-          {[...images, ...images].map((src, i) => (
+  useLayoutEffect(() => {
+    const container = containerRef.current;
+    const containerWidth = container.scrollWidth / 2;
+
+    animationRef.current = gsap.to(container, {
+      x: `-=${containerWidth}`,
+      duration: 24,
+      ease: "none",
+      repeat: -1,
+      modifiers: {
+        x: gsap.utils.unitize((x) => parseFloat(x) % containerWidth),
+      },
+    });
+  }, []);
+
+  const handleMouseEnter = () => {
+    animationRef.current?.pause();
+  };
+
+  const handleMouseLeave = () => {
+    animationRef.current?.resume();
+  };
+
+  // Double the images just once for seamless looping
+  const repeatedImages = [...images, ...images];
+
+  return (
+    <div className="overflow-hidden w-full py-4">
+      <div
+        className="flex w-max gap-8 pt-20"
+        ref={containerRef}
+      >
+        {repeatedImages.map((src, i) => (
+          <div
+            key={i}
+            className="marquee-item rounded-3xl max-h-64 w-auto object-contain"
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave}
+          >
             <img
-              key={i}
               src={src}
               alt={`img-${i}`}
-              className="marquee-item rounded-3xl max-h-64 w-auto object-contain"
+              className="rounded-3xl max-h-64 w-auto object-contain"
             />
-          ))}
-          {[...images, ...images].map((src, i) => (
+          </div>
+        ))}
+        {repeatedImages.map((src, i) => (
+          <div
+            key={i}
+            className="marquee-item rounded-3xl max-h-64 w-auto object-contain"
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={handleMouseLeave}
+          >
             <img
-              key={i}
               src={src}
               alt={`img-${i}`}
-              className="marquee-item rounded-3xl max-h-64 w-auto object-contain"
+              className="rounded-3xl max-h-64 w-auto object-contain"
             />
-          ))}
-        </div>
-        
+          </div>
+        ))}
       </div>
-    );
+    </div>
+  );
 };
 
 export default MarqueeImageScroll;
