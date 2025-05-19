@@ -1,55 +1,14 @@
-import React, { useEffect, useRef } from "react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
+import React from "react";
+import MarqueeImageScroll from "./MarqueeImageScroll";
 
-// Register the ScrollTrigger plugin
-gsap.registerPlugin(ScrollTrigger);
-
-const Heading = ({ title, containerClass }) => {
-    const containerRef = useRef(null);
-
-    useEffect(() => {
-      const ctx = gsap.context(() => {
-        const titleAnimation = gsap.timeline({
-          scrollTrigger: {
-            trigger: containerRef.current,
-            start: "100 bottom",
-            end: "center bottom",
-            toggleActions: "play none none reverse",
-          },
-        });
-  
-        titleAnimation.to(
-          ".animated-word",
-          {
-            opacity: 1,
-            transform: "translate3d(0, 0, 0) rotateY(0deg) rotateX(0deg)",
-            ease: "power2.inOut",
-            stagger: 0.02,
-          },
-          0
-        );
-      }, containerRef);
-  
-      return () => ctx.revert(); // Clean up on unmount
-    }, []);
-
+const Heading = () => {
   return (
-    <div ref={containerRef} className={`animated-title ${containerClass}`}>
-      {title.split("<br />").map((line, index) => (
-        <div
-          key={index}
-          className="flex-center max-w-full flex-wrap gap-2 px-10 md:gap-3"
-        >
-          {line.split(" ").map((word, idx) => (
-            <span
-              key={idx}
-              className="animated-word"
-              dangerouslySetInnerHTML={{ __html: word + "&nbsp;"}}
-            />
-          ))}
-        </div>
-      ))}
+    <div className=" ">
+      <div className="bg-black w-full h-full flex items-center justify-center">
+          <h1 className="text-4xl pt-32 font-bold text-center text-[#2EBAAF] uppercase">
+            The Best Lemon Tea In The Universe!
+          </h1>
+      </div>
     </div>
   );
 };
